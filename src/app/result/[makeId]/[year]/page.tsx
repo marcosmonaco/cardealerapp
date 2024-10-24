@@ -35,7 +35,11 @@ async function fetchVehicleModels(
     return data.Results
 }
 
-export default async function ResultPage({ params }: { params: Params }) {
+export default async function ResultPage({
+    params,
+}: {
+    params: Promise<Params>
+}) {
     const { makeId, year } = await params
     const models = await fetchVehicleModels(makeId, year)
 
