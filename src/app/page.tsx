@@ -21,7 +21,7 @@ export default async function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-100">
-            <img src="/car.svg" height={100} width={100} />
+            <img src="/hyperCar.svg" height={100} width={100} />
             <FilterPage makes={makes} />
         </main>
     )

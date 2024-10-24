@@ -41,7 +41,20 @@ export default async function ResultPage({
     params: Promise<Params>
 }) {
     const { makeId, year } = await params
-    const models = await fetchVehicleModels(makeId, year)
+
+    let data: VehicleModel[] = []
+    try {
+        data = await fetchVehicleModels(makeId, year)
+    } catch (error) {
+        console.error(error)
+    }
+
+    // I found some duplicated cars with the same Model_ID on the API, so this caused some errors on the maps below.
+
+    const cleanData = data.filter(
+        (arr, index, self) =>
+            index === self.findIndex((t) => t.Model_ID === arr.Model_ID)
+    )
 
     return (
         <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -52,13 +65,13 @@ export default async function ResultPage({
                 <p className="text-xl text-gray-600 mb-8">
                     Showing results for Make ID: {makeId} and Year: {year}
                 </p>
-                {models.length === 0 ? (
+                {cleanData.length === 0 ? (
                     <p className="text-xl text-gray-600">
                         No models found for this make and year.
                     </p>
                 ) : (
                     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {models.map((model) => (
+                        {cleanData.map((model: VehicleModel) => (
                             <li
                                 key={model.Model_ID}
                                 className="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200"
